@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  padding: 0; }
+
+.container {
+  background-color: #E4E3E1;
+  font-family: sans-serif;
+  color: #242424;
+  width: 800px;
+  height: 480px; }
+
+h1,
+h2,
+h3 {
+  margin: 0; }
+
+.mainWindow {
+  margin-left: 220px; }
+
+.sidebar {
+  background-color: #929292;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 480px; }
+
+.bigButton {
+  text-align: center;
+  width: 90%;
+  background-color: #449AC6;
+  color: #E4E3E1;
+  font-size: 2em;
+  border: solid 2px #242424;
+  border-radius: 4px;
+  margin-left: 5%; }
+
+.bigButton.active:focus,
+.bigButton:focus {
+  border: solid 2px #242424; }
+
+/*# sourceMappingURL=main.css.map */

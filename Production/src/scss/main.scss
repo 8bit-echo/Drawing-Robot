@@ -1,0 +1,54 @@
+// COLOR THEME
+$white: #E4E3E1;
+$lightgrey: #C1BCBB;
+$grey: #929292;
+$black: #242424;
+$blue: #449AC6;
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	background-color: $white;
+	font-family: sans-serif;
+	color: $black;
+	width: 800px;
+	height: 480px;
+}
+
+h1,
+h2,
+h3 {
+	margin: 0;
+}
+
+.mainWindow {
+	margin-left: 220px;
+}
+
+.sidebar {
+	background-color: $grey;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 480px;
+}
+
+.bigButton {
+	text-align: center;
+	width: 90%;
+	background-color: $blue;
+	color: $white;
+	font-size: 2em;
+	border: solid 2px $black;
+	border-radius: 4px;
+	margin-left: 5%;
+}
+
+.bigButton.active:focus,
+.bigButton:focus {
+	border: solid 2px $black;
+	//Not working right now.
+}
