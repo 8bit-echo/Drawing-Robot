@@ -44,13 +44,13 @@ var DebugWindow = React.createClass({
 var Button = React.createClass({
     render: function() {
         return (
-            <button className= "bigButton" type="button" onClick="this.run">{this.props.title}</button>
+            <button className= "bigButton" type="button" onClick={this.run}>{this.props.title}</button>
             //Rendered in the
         );
     },
-    // TODO: Figure out how to connect button to specific actions
+
     run: function() {
-        return ("???");
+        console.log(this.props.title + " button clicked");
     }
 });
 
@@ -74,6 +74,19 @@ var Sidebar = React.createClass({
 //         Main Window Things      //
 //=================================//
 
+var MainWindowButton = React.createClass({
+    run: function(){
+         console.log(this.props.title + " button clicked.");
+    },
+    render: function() {
+        return (
+            <button className="mainWindowButton" onClick={this.run}>
+            <i className={this.props.iconName}></i>
+            </button>
+        );
+    }
+});
+
 
 // The whole app class
 var Window = React.createClass({
@@ -81,6 +94,11 @@ var Window = React.createClass({
         return (
             <div>
                 <div className="mainWindow">
+                    <div className="mainButtonContainer">
+                        <MainWindowButton iconName="fa fa-3x fa-home" title="Home"/>
+                        <MainWindowButton iconName="fa fa-3x fa-rotate-right" title="Rotate Right"/>
+                        <MainWindowButton iconName="fa fa-3x fa-rotate-left" title="Rotate Left"/>
+                    </div>
                 </div>
                 <Sidebar></Sidebar>
             </div>

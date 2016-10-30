@@ -2,8 +2,10 @@
 $white: #E4E3E1;
 $lightgrey: #C1BCBB;
 $grey: #929292;
+$darkgrey: #636363;
 $black: #242424;
 $blue: #449AC6;
+$darkblue: #11527e;
 
 body {
 	margin: 0;
@@ -26,6 +28,26 @@ h3 {
 
 .mainWindow {
 	margin-left: 220px;
+
+	.mainButtonContainer{
+		display: flex;
+		justify-content: space-around;
+	}
+
+	.mainWindowButton {
+		color: $white;
+		background-color: $grey;
+		outline: none;
+		width: 60px;
+		height: 60px;
+		border: solid 2px $lightgrey;
+		border-radius: 8px;
+		margin: 10px;
+	}
+
+	.mainWindowButton:active {
+		background-color: $darkgrey;
+	}
 }
 
 .sidebar {
@@ -37,7 +59,6 @@ h3 {
 	padding: 0 5px;
 
 	.inputGroup {
-
 		margin-bottom: 10px;
 		outline: none;
 
@@ -48,16 +69,20 @@ h3 {
 			height: 35px;
 			margin: 5px 2px;
 			font-size: 1.5em;
-			border: solid 1px black;
+			border: solid 1px $black;
 			border-radius: 10px;
 			outline: none;
 		}
 
-		.numberInput {
-			height: 30px;
-			width: 86px;
-			margin-right: 5px;
+		.incriment-btn:active {
+			background-color: $darkblue;
 		}
+	}
+
+	.numberInput {
+		height: 30px;
+		width: 86px;
+		margin-right: 5px;
 	}
 
 	.debug {
@@ -74,21 +99,24 @@ h3 {
 			color: $white;
 		}
 	}
-}
 
-.bigButton {
-	text-align: center;
-	width: 90%;
-	background-color: $blue;
-	color: $white;
-	font-size: 2em;
-	border: solid 2px $black;
-	border-radius: 10px;
-	margin: 10px auto 10px 5%;
-}
+	.bigButton {
+		text-align: center;
+		width: 90%;
+		background-color: $blue;
+		color: $white;
+		font-size: 2em;
+		border: solid 2px $black;
+		border-radius: 10px;
+		margin: 10px auto 10px 5%;
+	}
 
-.bigButton.active:focus,
-.bigButton:focus {
-	outline: none;
-	//Not working right now.
+	.bigButton.active:focus,
+	.bigButton:focus {
+		outline: none;
+	}
+
+	.bigButton:active {
+		background-color: $darkblue;
+	}
 }
