@@ -1,7 +1,11 @@
 /* jshint esversion: 6 */
 
 
+//=================================//
+//          Sidebar Things         //
+//=================================//
 
+//+/- Buttons and Text Fields
 var InputGroup = React.createClass({
     render: function() {
         return (
@@ -18,7 +22,6 @@ var InputGroup = React.createClass({
         );
     }
 });
-
 
 //Debugger Panel
 var DebugWindow = React.createClass({
@@ -65,6 +68,12 @@ var Sidebar = React.createClass({
         );
     }
 });
+
+
+//=================================//
+//         Main Window Things      //
+//=================================//
+
 
 // The whole app class
 var Window = React.createClass({
