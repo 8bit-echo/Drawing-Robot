@@ -1,5 +1,42 @@
 /* jshint esversion: 6 */
 
+
+
+var InputGroup = React.createClass({
+    render: function() {
+        return (
+            <div className="inputGroup">
+                <span>{this.props.labelTitle}</span><br />
+                <input type="number" className="numberInput"></input>
+                <button className="incriment-btn">-</button>
+                <button className="incriment-btn">+</button>
+                <br />
+                <input type="number" className="numberInput"></input>
+                <button className="incriment-btn">-</button>
+                <button className="incriment-btn">+</button>
+            </div>
+        );
+    }
+});
+
+
+//Debugger Panel
+var DebugWindow = React.createClass({
+    log: function(text){
+        return (
+            // document.getElementById('debug').innerHTML += text
+            console.log("")
+         );
+    },
+    render: function() {
+        return (
+            <div className="debug">
+                <input type="textarea" id="debug"></input>
+            </div>
+        );
+    }
+});
+
 // Button Class
 var Button = React.createClass({
     render: function() {
@@ -8,7 +45,7 @@ var Button = React.createClass({
             //Rendered in the
         );
     },
-
+    // TODO: Figure out how to connect button to specific actions
     run: function() {
         return ("???");
     }
@@ -19,8 +56,11 @@ var Sidebar = React.createClass({
     render: function() {
         return (
             <div className="sidebar">
-                <h2>This is the sidebar</h2>
                 <Button title="Open"/>
+                <InputGroup labelTitle="Target Size (in)"/>
+                <InputGroup labelTitle="Manual XY Override (mm)"/>
+                <DebugWindow />
+                <Button title="Go" />
             </div>
         );
     }
@@ -32,7 +72,6 @@ var Window = React.createClass({
         return (
             <div>
                 <div className="mainWindow">
-                    <h1>This is the Window</h1>
                 </div>
                 <Sidebar></Sidebar>
             </div>
