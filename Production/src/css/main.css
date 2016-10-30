@@ -24,18 +24,23 @@ h3 {
   left: 0;
   height: 480px;
   padding: 0 5px; }
-  .sidebar .incriment-btn {
-    background-color: #449AC6;
-    color: #E4E3E1;
-    width: 40px;
-    height: 35px;
-    margin: 5px;
-    font-size: 1.5em;
-    border: solid 1px black;
-    border-radius: 10px; }
-  .sidebar .numberInput {
-    height: 30px;
-    width: 86px; }
+  .sidebar .inputGroup {
+    margin-bottom: 10px;
+    outline: none; }
+    .sidebar .inputGroup .incriment-btn {
+      background-color: #449AC6;
+      color: #E4E3E1;
+      width: 45px;
+      height: 35px;
+      margin: 5px 2px;
+      font-size: 1.5em;
+      border: solid 1px black;
+      border-radius: 10px;
+      outline: none; }
+    .sidebar .inputGroup .numberInput {
+      height: 30px;
+      width: 86px;
+      margin-right: 5px; }
   .sidebar .debug {
     width: 90%;
     margin: 0 auto;
@@ -56,11 +61,10 @@ h3 {
   font-size: 2em;
   border: solid 2px #242424;
   border-radius: 10px;
-  margin: 10px auto;
-  margin-left: 5%; }
+  margin: 10px auto 10px 5%; }
 
 .bigButton.active:focus,
 .bigButton:focus {
-  border: solid 2px #242424; }
+  outline: none; }
 
 /*# sourceMappingURL=main.css.map */
