@@ -7,19 +7,19 @@
 
 //+/- Buttons and Text Fields
 var InputGroup = React.createClass({
-    counter: function(){
+    counter: () => {
         console.log("Counter");
     },
 
-    subtract: function(i){
+    subtract: (i) => {
         console.log("Subtract - 1");
     },
 
-    add: function(i){
+    add: (i) => {
         console.log("Add + 1");
     },
 
-    render: function() {
+    render: () => {
         return (
             <div className="inputGroup">
                 <span>{this.props.labelTitle}</span><br />
@@ -37,13 +37,13 @@ var InputGroup = React.createClass({
 
 //Debugger Panel
 var DebugWindow = React.createClass({
-    log: function(text){
+    log: (text) => {
         return (
             // document.getElementById('debug').innerHTML += text
             console.log("")
          );
     },
-    render: function() {
+    render: () => {
         return (
             <div className="debug">
                 <input type="textarea" id="debug"></input>
@@ -54,21 +54,21 @@ var DebugWindow = React.createClass({
 
 // Button Class
 var Button = React.createClass({
-    render: function() {
+    render: () => {
         return (
             <button className= "bigButton" type="button" onClick={this.run}>{this.props.title}</button>
             //Rendered in the
         );
     },
 
-    run: function() {
+    run: () => {
         console.log(this.props.title + " button clicked");
     }
 });
 
 //Sidebar class
 var Sidebar = React.createClass({
-    render: function() {
+    render: () => {
         return (
             <div className="sidebar">
                 <Button title="Open"/>
@@ -87,10 +87,10 @@ var Sidebar = React.createClass({
 //=================================//
 
 var MainWindowButton = React.createClass({
-    run: function(){
+    run: () => {
          console.log(this.props.title + " button clicked.");
     },
-    render: function() {
+    render: () => {
         return (
             <button className="mainWindowButton" onClick={this.run}>
             <i className={"fa fa-3x fa-" + this.props.iconName}></i>
@@ -100,12 +100,12 @@ var MainWindowButton = React.createClass({
 });
 
 var RobotFrame = React.createClass({
-    moveTo: function(x,y){
+    moveTo: (x,y) => {
         // TODO: Must be within bounds of ArtFrame.
 
     },
 
-    render: function() {
+    render: () => {
         return (
             <div className="robotFrame"></div>
             // TODO: Must maintain Aspect ratio of 1 : 1.2405
@@ -115,7 +115,7 @@ var RobotFrame = React.createClass({
 });
 
 var ArtFrame = React.createClass({
-    render: function() {
+    render: () => {
         return (
             <div className="artContainer">
                 <div className="artFrame"></div>
@@ -131,7 +131,7 @@ var ArtFrame = React.createClass({
 
 // The whole app class
 var Window = React.createClass({
-    render: function() {
+    render: () => {
         return (
             <div>
                 <div className="mainWindow">
