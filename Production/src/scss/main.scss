@@ -48,6 +48,41 @@ h3 {
 	.mainWindowButton:active {
 		background-color: $darkgrey;
 	}
+
+	.mainContainer{
+		width: 95%;
+		margin: 0 auto;
+		display: block;
+		box-sizing: border-box;
+		// border: solid 2px white;
+		height: 390px;
+
+		.artContainer{
+			position: relative;
+		}
+
+		.artFrame{
+			width: 100%;
+			box-sizing: border-box;
+			border: dashed 2px $blue;
+			height: 350px;
+		}
+		span{
+			display: block;
+			position: relative;
+			margin-left: -20px;
+			color: $blue;
+		}
+
+		.robotFrame{
+			width:100px;
+			border: dotted 2px black;
+			height: 124.05px;
+			position: absolute;
+			bottom:25px;
+			left:5px;
+		}
+	}
 }
 
 .sidebar {

@@ -7,13 +7,25 @@
 
 //+/- Buttons and Text Fields
 var InputGroup = React.createClass({
+    counter: function(){
+        console.log("Counter");
+    },
+
+    subtract: function(i){
+        console.log("Subtract - 1");
+    },
+
+    add: function(i){
+        console.log("Add + 1");
+    },
+
     render: function() {
         return (
             <div className="inputGroup">
                 <span>{this.props.labelTitle}</span><br />
                 <input type="number" className="numberInput"></input>
                 <button className="incriment-btn">-</button>
-                <button className="incriment-btn">+</button>
+                <button className="incriment-btn" onClick={this.add}>+</button>
                 <br />
                 <input type="number" className="numberInput"></input>
                 <button className="incriment-btn">-</button>
@@ -81,8 +93,37 @@ var MainWindowButton = React.createClass({
     render: function() {
         return (
             <button className="mainWindowButton" onClick={this.run}>
-            <i className={this.props.iconName}></i>
+            <i className={"fa fa-3x fa-" + this.props.iconName}></i>
             </button>
+        );
+    }
+});
+
+var RobotFrame = React.createClass({
+    moveTo: function(x,y){
+        // TODO: Must be within bounds of ArtFrame.
+
+    },
+
+    render: function() {
+        return (
+            <div className="robotFrame"></div>
+            // TODO: Must maintain Aspect ratio of 1 : 1.2405
+
+        );
+    }
+});
+
+var ArtFrame = React.createClass({
+    render: function() {
+        return (
+            <div className="artContainer">
+                <div className="artFrame"></div>
+                <RobotFrame />
+                <span>(0,0)</span>
+            </div>
+
+                    // TODO: Get the target size from the InputGroup
         );
     }
 });
@@ -95,9 +136,16 @@ var Window = React.createClass({
             <div>
                 <div className="mainWindow">
                     <div className="mainButtonContainer">
-                        <MainWindowButton iconName="fa fa-3x fa-home" title="Home"/>
-                        <MainWindowButton iconName="fa fa-3x fa-rotate-right" title="Rotate Right"/>
-                        <MainWindowButton iconName="fa fa-3x fa-rotate-left" title="Rotate Left"/>
+                        <MainWindowButton iconName="home" title="Home"/>
+                        <MainWindowButton iconName="rotate-right" title="Rotate Right"/>
+                        <MainWindowButton iconName="rotate-left" title="Rotate Left"/>
+                        <MainWindowButton iconName="arrows-h" title = "Horizontal Flip" />
+                        <MainWindowButton iconName="arrows-v" title = "Veritcal Flip" />
+                        <MainWindowButton iconName="remove" title="Remove" />
+                    </div>
+
+                    <div className="mainContainer">
+                        <ArtFrame />
                     </div>
                 </div>
                 <Sidebar></Sidebar>
