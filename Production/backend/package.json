@@ -1,0 +1,16 @@
+{
+  "name": "drawing-backend",
+  "version": "1.0.0",
+  "description": "A test to make server side things go",
+  "main": "app.js",
+  "scripts": {
+    "test": "start"
+  },
+  "author": "Matt Dickey",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "multer": "^1.2.0"
+  }
+}

@@ -10,7 +10,7 @@ var ImageTracer = require(__dirname +'/../imagetracer_v1.1.2');
 var PNGReader = require(__dirname +'/PNGReader');
 
 // var file = __dirname + "/../testimages/1.png";
-var file = "/Users/dick.ey/Desktop/batman.png";
+var file = "/Users/dick.ey/Desktop/the-official-test-eagle.png";
 
 fs.readFile(file, function(err, bytes){
 	if (err) throw err;
