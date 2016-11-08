@@ -11,6 +11,8 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "multer": "^1.2.0"
+    "image-size": "^0.5.0",
+    "multer": "^1.2.0",
+    "python-shell": "^0.4.0"
   }
 }

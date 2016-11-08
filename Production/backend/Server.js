@@ -17,6 +17,8 @@ const upload = multer({
     dest: './uploads'
 }).single('file'); // for upload
 
+const sizeOf = require('image-size'); //slicing image
+
 //=============================//
 //           Router            //
 //=============================//
@@ -44,26 +46,47 @@ app.get('/uploads/image.png', function(req,res){
 
 
 app.post('/file_upload', upload, function(req, res) {
-    console.log(req.file.filename);
-    console.log(req.file.path);
-    console.log(req.file.mimetype);
+    //set the path for the upload
+    // TODO: Should probably timestamp this altough it is okay for file to be overwritten every timer right now.
+    // TODO: POST as AJAX request and return JSON for front-end processing.
     var file = __dirname + "/uploads/" + 'image' + '.png';
 
+    //read the file submitted
     fs.readFile(req.file.path, function(err, data) {
+        //save the file to the path
         fs.writeFile(file, data, function(err) {
             if (err) {
                 console.log(err);
             } else {
+                //return JSON data to browser.
+                // IMPORTANT: THIS WILL BE THE API ENTRY POINT FOR REACT!
+                var dimensions = analyzeImage(file);
                 response = {
                     message: 'File uploaded successfully',
-                    filename: 'image.png'
+                    filename: 'image.png',
+                    size: dimensions
                 };
             }
+            //print to console for debugging.
             console.log(response);
             res.end(JSON.stringify(response));
         });
     });
 });
+
+
+//=============================//
+//       Image Processing      //
+//=============================//
+
+ function analyzeImage(imageName){
+      var dimensions = sizeOf(imageName);
+      //return object to be parsed to JSON data.
+      return {
+          width: dimensions.width,
+          height: dimensions.height
+      };
+ }
 
 
 //=============================//
