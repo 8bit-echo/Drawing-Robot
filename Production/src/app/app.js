@@ -21,13 +21,13 @@ var InputGroup = React.createClass({
 
     render: function() {
         return (
-            <div className="inputGroup">
+            // <div className="inputGroup">
                 <span>{this.props.labelTitle}</span><br />
-                <input type="number" className="numberInput"></input>
+                <input type="number" className="numberInput" />
                 <button className="incriment-btn">-</button>
                 <button className="incriment-btn" onClick={this.add}>+</button>
                 <br />
-                <input type="number" className="numberInput"></input>
+                <input type="number" className="numberInput"/>
                 <button className="incriment-btn">-</button>
                 <button className="incriment-btn">+</button>
             </div>
