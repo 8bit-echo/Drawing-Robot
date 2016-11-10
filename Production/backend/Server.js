@@ -7,13 +7,17 @@ const express = require('express');
 var app = express();
 
 const bodyParser = require('body-parser'); // for POST
-var urlEncodedParser = bodyParser.urlencoded({extended: false}); //for POST
+var urlEncodedParser = bodyParser.urlencoded({
+    extended: false
+}); //for POST
 
 const fs = require('fs'); //for upload
 const multer = require('multer'); // for upload
 
 app.use(express.static('public')); //for server
-const upload = multer({dest: './uploads'}).single('file'); // for upload
+const upload = multer({
+    dest: './uploads'
+}).single('file'); // for upload
 const jimp = require('jimp'); //Javascript Image Processing
 const sizeOf = require('image-size'); //slicing image
 
@@ -87,12 +91,12 @@ function analyzeImage(imagePath) {
 }
 
 //helper callback
-function successCallback(operationName){
+function successCallback(operationName) {
     console.log(operationName + ' successful');
 }
 
 //helper callback
-function errorCallback(err){
+function errorCallback(err) {
     if (err) throw err;
 }
 
@@ -122,38 +126,75 @@ function processImage(imagePath) {
         //slice the image from the path into n slices.
         // TODO: Remove hardcoded number of slices.
         var slices = sliceImage(imagePath, image, 3);
+        var wait = true;
 
         //write each slice to 'slices' folder.
         for (var i = 0; i < slices.length; i++) {
-            slices[i].write(__dirname + '/slices/'+ 'slice' + i +'.png', successCallback('Slice write'));
+            slices[i].write(__dirname + '/slices/' + 'slice' + i + '.png', successCallback('Slice write'));
+            if (i === 2) {
+                wait = false;
+            }
+        }
+
+        if (!wait) {
+            setTimeout(
+                function() {
+                    for (var x = 0; x < slices.length; x++) {
+                        trace(__dirname + '/slices/' + 'slice' + x + '.png', x);
+                    }
+                }, 3000);
+
         }
     });
 }
 
 //Image Tracer
-function trace(slicePath){
-    fs.readFile(slicePath, function(err, bytes){
-         if (err) throw err;
-         console.log('now tracing ' + slicePath);
+function trace(slicePath, i) {
+    fs.readFile(slicePath, function(err, bytes) {
+        if (err) throw err;
+        console.log('now tracing ' + slicePath);
 
-         var reader = new PNGReader(bytes);
-         reader.parse(function(err, png){
-              var imageData = {width: png.width, height:png.height, data: png.pixels};
-              var options = {ltres: 1, numberofcolors: 2, pathomit: 8 };
-              var svgstring = imageTracer.imagedataToSVG(imageData, options);
+        var reader = new PNGReader(bytes);
+        reader.parse(function(err, png) {
+            var imageData = {
+                width: png.width,
+                height: png.height,
+                data: png.pixels
+            };
+            var options = {
+                ltres: 1,
+                numberofcolors: 2,
+                pathomit: 8
+            };
+            var svgstring = imageTracer.imagedataToSVG(imageData, options);
 
-              fs.writeFile(__dirname + '/output/'+'output' + '.svg', svgstring, function(err){
-                  if (err) throw err;
-                  console.log('writing svg to ' + __dirname + '/output/'+'output'+'.svg');
-                  successCallback('svg output');
-              });
-         });
+            fs.writeFile(__dirname + '/output/' + 'output' + i + '.svg', svgstring, function(err) {
+                if (err) throw err;
+                console.log('writing svg to ' + '/output/' + 'output' + i + '.svg');
+                successCallback('svg output');
+            });
+        });
     });
 
 }
 
 // TODO: Something is wrong with the timeline. Images get traced before image is fully processed.
-processImage(__dirname + "/uploads/" + 'image' + '.png');
+
+// var imagePromise = new Promise(function(){
+//      console.log('I Promise...');
+//      processImage(__dirname + "/uploads/" + 'image' + '.png');
+//
+//      console.log('should resolve soon');
+//      if (err) {
+//          reject(console.log('crash'));
+//      } else {
+//          resolve(true);
+//      }
+// });
+//
+// imagePromise.then(trace(__dirname + '/slices/'+ 'slice1.png'));
+var uploadedFile = __dirname + "/uploads/" + 'image' + '.png';
+processImage(uploadedFile);
 // trace(__dirname + '/slices/'+ 'slice1.png');
 
 
