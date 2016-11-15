@@ -143,7 +143,6 @@ function processImage(imagePath) {
                         trace(__dirname + '/slices/' + 'slice' + x + '.png', x);
                     }
                 }, 3000);
-
         }
     });
 }
@@ -175,7 +174,6 @@ function trace(slicePath, i) {
             });
         });
     });
-
 }
 
 // TODO: Something is wrong with the timeline. Images get traced before image is fully processed.
