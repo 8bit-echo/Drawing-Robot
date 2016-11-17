@@ -1,12 +1,12 @@
 /* jshint esversion: 6 */
 $(document).ready(function() {
-    console.log('document is ready');
+    console.log('Client is ready');
 
     var socket = io.connect();
-    socket.on('news', function(data) {
-        console.log(data);
-        socket.emit('my other event', {
-            my: 'data'
+    socket.on('server handshake', function(data) {
+        console.log(data.action);
+        socket.emit('client handshake', {
+                action: 'handshake returned from client'
         });
     });
     document.getElementById('socket-button').addEventListener('click', function() {

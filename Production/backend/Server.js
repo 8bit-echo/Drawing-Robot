@@ -6,7 +6,10 @@
 const app = require('express')();
 const socketServer = require('http').Server(app);
 const io = require('socket.io')(socketServer);
-socketServer.listen(3000);                                              //for server
+socketServer.listen(3000, () => {
+    console.log('Server up on localhost:3000');
+    console.log('waiting for commands...');
+});                                              //for server
 
 const bodyParser = require('body-parser');                              // for POST
 var urlEncodedParser = bodyParser.urlencoded({
@@ -28,6 +31,25 @@ const PNGReader = require(__dirname + '/lib/PNGReader.js');             // Trace
 
 
 const serialPort = require('serialport');                               //Serial Com
+// const svg2wkt = require(__dirname + '/lib/svg2wkt.js');
+
+
+// var converter = new svg2wkt();
+
+var svgPath = __dirname + '/output/output0.svg';
+console.log(svgPath);
+
+// Gets raw SVG string data. TODO catch the raw data string to a variable for use later with svg2wkt.
+var svgData;
+fs.readFile(svgPath, 'utf-8', (err, data) => {
+    if (err) throw err;
+    // svgData = data;
+    console.log(data);
+});
+
+console.log(svgData);
+
+
 
 
 //=============================//
@@ -208,5 +230,9 @@ var uploadedFile = __dirname + "/uploads/" + 'image' + '.png';
 
 io.on('connection', function (socket) {
   // socket.emit('news', { hello: 'world' });
+  socket.emit('server handshake', {action:'handshake from server'});
+  socket.on('client handshake', function(data){
+       console.log(data.action);
+  });
   socket.on('click', function(data){console.log(data.action);});
 });
