@@ -119,8 +119,7 @@ var ArtFrame = React.createClass({
     render: function() {
         return (
             <div className="artContainer">
-                <div className="artFrame"></div>
-                <RobotFrame />
+                <canvas id="artContainer" width="100%" height="350px"></canvas>
                 <span>(0,0)</span>
             </div>
 

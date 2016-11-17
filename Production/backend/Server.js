@@ -3,26 +3,40 @@
 //=============================//
 //     Modules & Constants     //
 //=============================//
-const express = require('express');
-var app = express();
+const app = require('express')();
+const socketServer = require('http').Server(app);
+const io = require('socket.io')(socketServer);
+socketServer.listen(3000);                                              //for server
 
-const bodyParser = require('body-parser'); // for POST
+const bodyParser = require('body-parser');                              // for POST
 var urlEncodedParser = bodyParser.urlencoded({
     extended: false
-}); //for POST
+});                                                                     // for POST
 
-const fs = require('fs'); //for upload
-const multer = require('multer'); // for upload
+const fs = require('fs');                                               // for upload
+const multer = require('multer');                                       // for upload
 
-app.use(express.static('public')); //for server
 const upload = multer({
     dest: './uploads'
-}).single('file'); // for upload
-const jimp = require('jimp'); //Javascript Image Processing
-const sizeOf = require('image-size'); //slicing image
+}).single('file');                                                      // for upload
 
-const imageTracer = require(__dirname + '/lib/imagetracer_v1.1.2'); // Tracer
-const PNGReader = require(__dirname + '/lib/PNGReader.js'); // Tracer
+const jimp = require('jimp');                                           //Javascript Image Processing
+const sizeOf = require('image-size');                                   //slicing image
+
+const imageTracer = require(__dirname + '/lib/imagetracer_v1.1.2');     // Tracer
+const PNGReader = require(__dirname + '/lib/PNGReader.js');             // Tracer
+
+
+const serialPort = require('serialport');                               //Serial Com
+
+
+//=============================//
+//    Server Initialization    //
+//=============================//
+
+// var server = app.listen(3000, function() {
+//     console.log('Server is up: localhost:3000');
+// });
 
 //=============================//
 //           Router            //
@@ -35,6 +49,9 @@ app.get('/', function(req, res) {
 
 app.get('/main.js', function(req, res) {
     res.sendFile(__dirname + '/' + 'main.js');
+});
+app.get('/lib/socket.io.js', function(req, res) {
+    res.sendFile(__dirname + '/lib/' + 'socket.io.js');
 });
 
 app.get('/uploads/image.png', function(req, res) {
@@ -177,29 +194,19 @@ function trace(slicePath, i) {
 }
 
 // TODO: Something is wrong with the timeline. Images get traced before image is fully processed.
-
-// var imagePromise = new Promise(function(){
-//      console.log('I Promise...');
-//      processImage(__dirname + "/uploads/" + 'image' + '.png');
-//
-//      console.log('should resolve soon');
-//      if (err) {
-//          reject(console.log('crash'));
-//      } else {
-//          resolve(true);
-//      }
-// });
-//
-// imagePromise.then(trace(__dirname + '/slices/'+ 'slice1.png'));
 var uploadedFile = __dirname + "/uploads/" + 'image' + '.png';
-processImage(uploadedFile);
+// processImage(uploadedFile);
 // trace(__dirname + '/slices/'+ 'slice1.png');
 
 
+
+
+
 //=============================//
-//    Server Initialization    //
+//           Socket            //
 //=============================//
 
-var server = app.listen(3000, function() {
-    console.log('Server is up: localhost:3000');
+io.on('connection', function (socket) {
+  // socket.emit('news', { hello: 'world' });
+  socket.on('click', function(data){console.log(data.action);});
 });
