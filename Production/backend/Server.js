@@ -40,12 +40,16 @@ var svgPath = __dirname + '/output/output0.svg';
 console.log(svgPath);
 
 // Gets raw SVG string data. TODO catch the raw data string to a variable for use later with svg2wkt.
+
 var svgData;
 fs.readFile(svgPath, 'utf-8', (err, data) => {
     if (err) throw err;
     // svgData = data;
-    console.log(data);
+    // console.log(svgData);
+    // return data;
 });
+
+
 
 console.log(svgData);
 
