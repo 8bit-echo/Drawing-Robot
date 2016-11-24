@@ -8,17 +8,19 @@
     <body>
 
         <h2>File Upload</h2>
-            <form class="" action="http://localhost:3000/file_upload" method="POST" enctype="multipart/form-data">
-                <input type="file" name="file" size="50">
-                <input type="submit" name="" value="Upload File">
 
-            </form>
+            <input type="file" id="upload">
 
             <button type="button" id="socket-button">Socket Test</button>
 
             <img src="uploads/image.png" alt="" width="400"/>
 
+
+            <textarea name="name" rows="8" cols="80" id="svgString"></textarea>
+
         <script src="lib/socket.io.js"></script>
+        <!-- This is socket.io file upload -->
+        <script src="lib/client.min.js"></script>
         <script src="main.js"></script>
     </body>
 </html>

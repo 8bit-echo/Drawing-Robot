@@ -4,35 +4,21 @@
 //     Modules & Constants     //
 //=============================//
 
-const app = require('express')();
+const siofu = require('socketio-file-upload');
+const app = require('express')().use(siofu.router);
 const socketServer = require('http').Server(app);
 const io = require('socket.io')(socketServer);
 socketServer.listen(3000, () => {
     console.log('Server up on localhost:3000');
     console.log('waiting for commands...');
 }); //for server
-
-const bodyParser = require('body-parser'); // for POST
-var urlEncodedParser = bodyParser.urlencoded({
-    extended: false
-}); // for POST
-
 const fs = require('fs'); // for upload
-const multer = require('multer'); // for upload
-
-const upload = multer({
-    dest: './uploads'
-}).single('file'); // for upload
-
 const jimp = require('jimp'); //Javascript Image Processing
 const sizeOf = require('image-size'); //slicing image
-
 const imageTracer = require(__dirname + '/lib/imagetracer_v1.1.2'); // Tracer
 const PNGReader = require(__dirname + '/lib/PNGReader.js'); // Tracer
-
 const serialPort = require('serialport'); //Serial Com
-
-const series = require('async-series'); // chaining of events 11/22
+const series = require('async-series'); // chaining of events
 
 
 //=============================//
@@ -48,42 +34,12 @@ app.get('/main.js', function(req, res) {
 app.get('/lib/socket.io.js', function(req, res) {
     res.sendFile(__dirname + '/lib/' + 'socket.io.js');
 });
+app.get('/lib/client.min.js', function(req, res) {
+    res.sendFile(__dirname + '/lib/' + 'client.min.js');
+});
 app.get('/uploads/image.png', function(req, res) {
     res.sendFile(__dirname + '/uploads/image.png');
 });
-
-
-//=============================//
-//         File Upload         //
-//=============================//
-
-app.post('/file_upload', upload, function(req, res) {
-    //set the path for the upload
-    // TODO: POST as AJAX request and return JSON for front-end processing.
-    var file = __dirname + "/uploads/" + 'image' + '.png';
-
-    //read the file submitted
-    fs.readFile(req.file.path, function(err, data) {
-        //save the file to the path
-        fs.writeFile(file, data, function(err) {
-            if (err) throw err;
-
-            //     console.log(err);
-            // } else {
-                var dimensions = analyzeImage(file);
-                response = {
-                    message: 'File uploaded successfully',
-                    filename: 'image.png',
-                    size: dimensions
-                };
-            // }
-            //print to console for debugging.
-            console.log(response);
-            res.end(JSON.stringify(response));
-        });
-    });
-});
-
 
 //=============================//
 //       Image Processing      //
@@ -129,7 +85,7 @@ io.on('connection', function(socket) {
 
     //called inside processImage().
     function sliceImage(imagePath, jimpImage, dimensionsObject) {
-        var slices = dimensionsObject.slices.totalSlices;
+        var slices = dimensionsObject.slices.horiztonalSlices;
 
         var slicesArray = [];
         // jimpImage = jimpImage.resize(dimensionsObject.dimensions.target.width,jimp.AUTO);
@@ -233,18 +189,25 @@ io.on('connection', function(socket) {
     //     Manual Event Space      //
     //=============================//
 
+    var uploader = new siofu();
+    uploader.dir= __dirname + '/uploads/';
+    uploader.listen(socket);
+
+    console.log(uploader.dir);
+
     //Choose an uploadedFile:
         // var uploadedFile = __dirname + "/uploads/" + 'image' + '.png';
         // var uploadedFile = __dirname + "/uploads/" + 'rotated-scaled' + '.png';
+        //  var uploadedFile = __dirname + "/uploads/" + 'doublewide.png';
 
     //Pretend like this is from the front-end.
-    // var mySize = {
-    //     height: 381 / 25.4,
-    //     width: 315 / 25.4
-    // };
+    var myTargetSize = {
+        width: (315*2) / 25.4,
+        height: 381/ 25.4
+    };
 
     //Analyze the Image
-        // var analyzedImage = analyzeImage(uploadedFile, mySize);
+        // var analyzedImage = analyzeImage(uploadedFile, myTargetSize);
         // console.log(analyzedImage);
 
     //Process & Slice the image.

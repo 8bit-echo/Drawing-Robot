@@ -5,6 +5,9 @@ $(document).ready(function() {
     //initialize server connection
     var socket = io.connect();
 
+    var uploader = new SocketIOFileUpload(socket);
+    uploader.listenOnInput(document.getElementById('upload'));
+
     //waits for the server to start the process, then sends confirmation back.
     socket.on('server handshake', function(data) {
         console.log(data.action);
@@ -24,6 +27,8 @@ $(document).ready(function() {
     //runs when receives SVG string from the server.
     socket.on('svgData', function(data){
         console.log('receiving svg Data...');
+
+        $('#svgString').val(data.svgData);
         // console.log(data.svgData);
     });
 });
