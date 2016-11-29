@@ -1,0 +1,187 @@
+body, h1, h2, h3 {
+    margin: 0
+}
+
+body {
+    padding: 0
+}
+
+.container {
+    background-color: #E4E3E1;
+    font-family: sans-serif;
+    color: #242424;
+    width: 800px;
+    height: 480px
+}
+
+canvas {
+    border: solid 1px black;
+    /*width: 550px;*/
+    /*height: 370px;*/
+}
+
+.mainWindow {
+    margin-left: 220px
+}
+
+.mainWindow .mainButtonContainer {
+    display: flex;
+    justify-content: space-around
+}
+
+.mainWindow .mainWindowButton {
+    color: #E4E3E1;
+    background-color: #929292;
+    outline: 0;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #C1BCBB;
+    border-radius: 8px;
+    margin: 10px
+}
+
+.mainWindow .mainWindowButton:active {
+    background-color: #636363
+}
+
+.mainWindow .mainContainer {
+    width: 95%;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+    height: 390px
+}
+
+.mainWindow .mainContainer .artContainer {
+    position: relative
+}
+
+.mainWindow .mainContainer .artFrame {
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px dashed #449AC6;
+    height: 350px
+}
+
+.mainWindow .mainContainer span {
+    display: block;
+    position: relative;
+    margin-left: -13px;
+    color: #449AC6;
+}
+
+.mainWindow .mainContainer .robotFrame {
+    width: 100px;
+    border: 2px dotted #000;
+    height: 124.05px;
+    position: absolute;
+    bottom: 25px;
+    left: 5px
+}
+
+.sidebar {
+    background-color: #929292;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 480px;
+    padding: 0 5px
+}
+
+.sidebar .inputGroup {
+    margin-bottom: 10px;
+    outline: 0
+}
+
+#topInputGroup{
+    margin-top: 25px;
+}
+
+.sidebar .inputGroup .incriment-btn {
+    background-color: #449AC6;
+    color: #E4E3E1;
+    width: 45px;
+    height: 35px;
+    margin: 5px 2px;
+    font-size: 1.5em;
+    border: 1px solid #242424;
+    border-radius: 10px;
+    outline: 0
+}
+
+.sidebar .inputGroup .incriment-btn:active {
+    background-color: #11527e
+}
+
+.sidebar .numberInput {
+    height: 30px;
+    width: 86px;
+    margin-right: 5px;
+    font-size: 1.3em;
+    text-align: center;;;
+}
+
+.sidebar .debug {
+    width: 90%;
+    margin: 0 auto;
+    height: 100px
+}
+
+.sidebar .debug input {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #242424;
+    color: #E4E3E1
+}
+
+.sidebar .bigButton {
+    text-align: center;
+    width: 90%;
+    background-color: #449AC6;
+    color: #E4E3E1;
+    font-size: 2em;
+    border: 2px solid #242424;
+    border-radius: 10px;
+    margin: 10px auto 10px 5%;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+#file{
+    display: none;
+}
+
+.openButton{
+    background-color: #449AC6;
+    color: #E4E3E1;
+    font-size: 2em;
+    border: 2px solid #242424;
+    border-radius: 10px;
+    padding-left: 55px;
+    padding-right: 55px;
+    /*padding: 0 2em;*/
+}
+
+.buttonContainer{
+    margin: 0 auto;
+    margin-top: 20px;
+    /*border: solid 1px;*/
+    width: 90%;
+}
+
+.sidebar .bigButton.active:focus, .sidebar .bigButton:focus {
+    outline: 0
+}
+
+.sidebar .bigButton:active {
+    background-color: #11527e
+}

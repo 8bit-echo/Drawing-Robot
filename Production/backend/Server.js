@@ -25,21 +25,58 @@ const series = require('async-series'); // chaining of events
 //           Router            //
 //=============================//
 
+//TEST FILES
+
+// app.get('/', function(req, res) {
+//     res.sendFile(__dirname + '/' + 'index.html');
+// });
+// app.get('/main.js', function(req, res) {
+//     res.sendFile(__dirname + '/' + 'main.js');
+// });
+// app.get('/lib/socket.io.js', function(req, res) {
+//     res.sendFile(__dirname + '/lib/' + 'socket.io.js');
+// });
+// app.get('/lib/client.min.js', function(req, res) {
+//     res.sendFile(__dirname + '/lib/' + 'client.min.js');
+// });
+// app.get('/uploads/image.png', function(req, res) {
+//     res.sendFile(__dirname + '/uploads/image.png');
+// });
+
+//PRODUCTION FILES
+
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/' + 'index.html');
+    res.sendFile(__dirname + '/public_html/' + 'index.html');
+});
+app.get('/style.css', function(req, res) {
+    res.sendFile(__dirname + '/public_html/' + 'style.css');
 });
 app.get('/main.js', function(req, res) {
-    res.sendFile(__dirname + '/' + 'main.js');
+    res.sendFile(__dirname + '/public_html/' + 'main.js');
 });
-app.get('/lib/socket.io.js', function(req, res) {
-    res.sendFile(__dirname + '/lib/' + 'socket.io.js');
+app.get('/lib/jquery.min.js', function(req, res) {
+    res.sendFile(__dirname + '/public_html/lib/' + 'jquery.min.js');
 });
 app.get('/lib/client.min.js', function(req, res) {
-    res.sendFile(__dirname + '/lib/' + 'client.min.js');
+    res.sendFile(__dirname + '/public_html/lib/' + 'client.min.js');
+});
+app.get('/lib/lodash.min.js', function(req, res) {
+    res.sendFile(__dirname + '/public_html/lib/' + 'lodash.min.js');
+});
+app.get('/lib/socket.io.js', function(req, res) {
+    res.sendFile(__dirname + '/public_html/lib/' + 'socket.io.js');
+});
+app.get('/lib/svg-to-wkt.js', function(req, res) {
+    res.sendFile(__dirname + '/public_html/lib/' + 'svg-to-wkt.js');
+});
+app.get('/lib/svg2xy.js', function(req, res) {
+    res.sendFile(__dirname + '/public_html/lib/' + 'svg2xy.js');
 });
 app.get('/uploads/image.png', function(req, res) {
     res.sendFile(__dirname + '/uploads/image.png');
 });
+
+
 
 //=============================//
 //       Image Processing      //
@@ -95,6 +132,9 @@ io.on('connection', function(socket) {
         var sliceWidth = dimensions.width / dimensionsObject.slices.horiztonalSlices;
         console.log(sliceWidth);
         var sliceHeight = dimensions.height / dimensionsObject.slices.verticalSlices;
+
+        //send the slice dimensions to the client for XY conversion.
+        socket.emit('slice dimensions', {width: sliceWidth, height: sliceHeight});
         var sliceXOrigin = 0;
         var sliceYOrigin = 0;
 
@@ -149,7 +189,8 @@ io.on('connection', function(socket) {
                 ],
                 function(err) {
                     console.log(err);
-                }, true);
+                }, true
+            );
 
         });
     }
@@ -184,7 +225,6 @@ io.on('connection', function(socket) {
     }
 
 
-
     //=============================//
     //     Manual Event Space      //
     //=============================//
@@ -193,38 +233,49 @@ io.on('connection', function(socket) {
     uploader.dir= __dirname + '/uploads/';
     uploader.listen(socket);
 
-    console.log(uploader.dir);
+
+    //Global Variables from Client
+    var uploadedFileName;
+
+
 
     //Choose an uploadedFile:
         // var uploadedFile = __dirname + "/uploads/" + 'image' + '.png';
         // var uploadedFile = __dirname + "/uploads/" + 'rotated-scaled' + '.png';
-        //  var uploadedFile = __dirname + "/uploads/" + 'doublewide.png';
+         var uploadedFile = __dirname + "/uploads/" + 'doublewide.png';
+        //var uploadedFile = __dirname + "/uploads/" + uploadedFileName;
 
     //Pretend like this is from the front-end.
+    //in inches
     var myTargetSize = {
         width: (315*2) / 25.4,
-        height: 381/ 25.4
+        height: 381 / 25.4
     };
 
     //Analyze the Image
-        // var analyzedImage = analyzeImage(uploadedFile, myTargetSize);
+        var analyzedImage = analyzeImage(uploadedFile, myTargetSize);
         // console.log(analyzedImage);
 
     //Process & Slice the image.
-        // processImage(uploadedFile, analyzedImage);
+        processImage(uploadedFile, analyzedImage);
 
     // Make into SVG
         // trace(__dirname + '/slices/'+ 'slice0.png');
 
     //Send the SVG Data to Front End.
-        // var svgPath = __dirname + '/output/output0.svg';
-        // var svgData;
-        // fs.readFile(svgPath, 'utf-8', (err, data) => {
-        //     if (err) throw err;
-        //     socket.emit('svgData', {
-        //         svgData: data
-        //     });
-        // });
+    function sendSVGData(){
+        console.log('sendSVG data called');
+        var svgPath = __dirname + '/output/output0.svg';
+        var svgData;
+        fs.readFile(svgPath, 'utf-8', (err, data) => {
+            if (err) throw err;
+            socket.emit('svgData', {
+                svgData: data
+            });
+        });
+    }
+
+    sendSVGData();
 
 
 
@@ -243,13 +294,33 @@ io.on('connection', function(socket) {
     //=============================//
 
     console.log('reqesting handshake from client...');
+
     socket.emit('server handshake', {
         action: 'received handshake from server'
     });
+
     socket.on('client handshake', function(data) {
         console.log(data.action);
     });
+
     socket.on('click', function(data) {
         console.log(data.action);
     });
+
+    socket.on('New target size', function(data){
+        myTargetSize = data;
+        console.log(myTargetSize);
+    });
+
+    socket.on('upload complete', function(data){
+        console.log('file uploaded to server successfully');
+        uploadedFileName = data.filename;
+        console.log('uploaded file name is: '+ uploadedFileName);
+    });
 });
+
+
+
+// TODO: Send slice dimensions back to the front-end.
+
+// TODO: move events into their respective Socket sections for timing?

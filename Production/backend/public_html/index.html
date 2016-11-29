@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://use.fontawesome.com/de747578ea.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" src="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <title>Drawing Robot</title>
+</head>
+
+<body>
+    <div id="container" class="container">
+        <div class="mainWindow">
+            <div class="mainButtonContainer">
+                <button class="mainWindowButton">
+                    <i class="fa fa-3x fa-home"></i>
+                </button>
+                <button class="mainWindowButton">
+                    <i class="fa fa-3x fa-rotate-right"></i>
+                </button>
+                <button class="mainWindowButton">
+                    <i class="fa fa-3x fa-rotate-left"></i>
+                </button>
+                <button class="mainWindowButton">
+                    <i class="fa fa-3x fa-arrows-h"></i>
+                </button>
+                <button class="mainWindowButton">
+                    <i class="fa fa-3x fa-arrows-v"></i>
+                </button>
+                <button class="mainWindowButton">
+                    <i class="fa fa-3x fa-remove"></i>
+                </button>
+            </div>
+
+            <div class="mainContainer">
+                <div class="artContainer">
+                    <canvas id="artContainer" width='550' height='370'></canvas>
+                    <span>(0,0)</span>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <!-- <button class="bigButton" type="button">Open</button> -->
+            <div class="buttonContainer"><input class="bigButton fileinput" id="file" type="file">
+
+            <label for="file" class="openButton"> Open</label></div>
+
+            <div class="inputGroup" id="topInputGroup">
+                <span>Target Size (in)</span>
+                <br>
+                <input type="number" class="numberInput" id="targetSize-W">
+                <button class="incriment-btn" id="targetSize-W-down">-</button>
+                <button class="incriment-btn" id="targetSize-W-up">+</button>
+                <br>
+                <input type="number" class="numberInput"id="targetSize-H">
+                <button class="incriment-btn"id="targetSize-H-down">-</button>
+                <button class="incriment-btn"id="targetSize-H-up">+</button>
+            </div>
+            <div class="inputGroup">
+                <span>Manual XY Override (mm)</span>
+                <br>
+                <input type="number" class="numberInput" id="manualXY-W">
+                <button class="incriment-btn" id="manualXY-W-down">-</button>
+                <button class="incriment-btn" id="manualXY-W-up">+</button>
+                <br>
+                <input type="number" class="numberInput" id="manualXY-H">
+                <button class="incriment-btn" id="manualXY-H-down">-</button>
+                <button class="incriment-btn" id="manualXY-H-up">+</button>
+            </div>
+            <!-- <div class="debug">
+                <input type="textarea" id="debug">
+            </div> -->
+            <button class="bigButton" type="button">Go</button>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/socket.io.js"></script>
+    <script src="lib/client.min.js"></script>
+    <script src="lib/lodash.min.js"></script>
+    <script src="lib/svg-to-wkt.js"></script>
+    <script src="lib/svg2xy.js"></script>
+    <script src="main.js"></script>
+
+</body>
+
+</html>
