@@ -72,6 +72,10 @@ $(document).ready(function() {
     });
 
 
+    $('#exit').click(function(){
+        jQuery.event.trigger({ type : 'keypress', which : character.charCodeAt(122) });
+    });
+
     //=============================//
     //   Global Scope Functions    //
     //=============================//

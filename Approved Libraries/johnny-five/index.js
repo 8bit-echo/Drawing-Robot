@@ -155,61 +155,71 @@ arduino.on('ready', function() {
     }
 
     function prepareCoordinate(coordObj, cb) {
-            var xDelta;
-            var yDelta;
-            var xDir;
-            var yDir;
+        var xDelta;
+        var yDelta;
+        var xDir;
+        var yDir;
 
-            //map each xy pair to motor steps
-            coordObj.x = mapXY(coordObj.x, 0, 315, 0, 14000);
-            coordObj.y = mapXY(coordObj.y, 0, 381, 0, 16900);
+        //map each xy pair to motor steps
+        coordObj.x = mapXY(coordObj.x, 0, 315, 0, 14000);
+        coordObj.y = mapXY(coordObj.y, 0, 381, 0, 16900);
 
-            if (i === 0) {
-                //default delta from the first point is here.
-                xDelta = coordObj.x;
-                yDelta = coordObj.y;
-                // console.log(xDelta);
+        if (i === 0) {
+            //default delta from the first point is here.
+            xDelta = coordObj.x;
+            yDelta = coordObj.y;
+            // console.log(xDelta);
 
-            } else {
-                //calculate the delta movement from each previous steps
-                xDelta = calculateDeltas(coordObj.x, coords[i - 1].x);
-                yDelta = calculateDeltas(coordObj.y, coords[i - 1].y);
-                console.log(xDelta);
-            }
-
-            // determine if the direction is positive or negative
-            if (xDelta < 0) {
-                xDir = 0;
-                xDelta = xDelta * -1;
-
-                coordObj.xDelta = xDelta;
-                coordObj.xDir = xDir;
-            } else {
-                xDir = 1;
-
-                coordObj.xDelta = xDelta;
-                coordObj.xDir = xDir;
-            }
-
-            if (yDelta < 0) {
-                yDir = 1;
-                yDelta = yDelta * -1;
-
-                coordObj.yDelta = yDelta;
-                coordObj.yDir = yDir;
-            } else {
-                yDir = 0;
-
-                coordObj.yDelta = yDelta;
-                coordObj.yDir = yDir;
-            }
+        } else {
+            //calculate the delta movement from each previous steps
+            xDelta = calculateDeltas(coordObj.x, coords[i - 1].x);
+            yDelta = calculateDeltas(coordObj.y, coords[i - 1].y);
+            console.log(xDelta);
         }
 
-        setTimeout(function(){
-            cb();
-        },0);
+        // determine if the direction is positive or negative
+        if (xDelta < 0) {
+            xDir = 0;
+            xDelta = xDelta * -1;
+
+            coordObj.xDelta = xDelta;
+            coordObj.xDir = xDir;
+        } else {
+            xDir = 1;
+
+            coordObj.xDelta = xDelta;
+            coordObj.xDir = xDir;
+        }
+
+        if (yDelta < 0) {
+            yDir = 1;
+            yDelta = yDelta * -1;
+
+            coordObj.yDelta = yDelta;
+            coordObj.yDir = yDir;
+        } else {
+            yDir = 0;
+
+            coordObj.yDelta = yDelta;
+            coordObj.yDir = yDir;
+        }
+
+        setTimeout(function() {cb();}, 0);
         return coordObj;
     }
+
+
+
+    var testCoord = {
+        x: 315,
+        y: 381
+    };
+    console.log('before');
+    console.log(testCoord);
+
+    testCoord = prepareCoordinate(this);
+    console.log('after');
+    console.log(testCoord);
 
     function mm(mm) {
         return mm * 44.44444444444;
@@ -221,11 +231,11 @@ arduino.on('ready', function() {
         xStepper.direction(coord.xDir).rpm(300).step(mm(coord.x), function() {
             console.log('x done');
             xDone = true;
-            if (xDone && yDone){
+            if (xDone && yDone) {
                 console.log('both done');
                 if (typeof done === 'function') {
                     done();
-                } else{
+                } else {
                     console.log(typeof done);
                 }
             }
@@ -234,11 +244,11 @@ arduino.on('ready', function() {
         yStepper.direction(coord.yDir).rpm(300).step(mm(coord.y), function() {
             console.log('y done');
             yDone = true;
-            if (xDone && yDone){
+            if (xDone && yDone) {
                 console.log('both done');
                 if (typeof done === 'function') {
                     done();
-                } else{
+                } else {
                     console.log(typeof done);
                 }
             }
@@ -270,13 +280,15 @@ arduino.on('ready', function() {
 
 
     robot.on('done', function() {
-    console.log('finished');
+        console.log('finished');
     });
 
     robot.on('next', function(i) {
         console.log('received next', i);
         if (i < steps.length) {
-            move(steps[i], function(){robot.emit('next', i + 1);});
+            move(steps[i], function() {
+                robot.emit('next', i + 1);
+            });
 
         } else {
             robot.emit('done');
@@ -285,7 +297,9 @@ arduino.on('ready', function() {
 
     robot.on('begin', function() {
         console.log('received begin');
-        move(steps[0], function(){robot.emit('next', 1);});
+        move(steps[0], function() {
+            robot.emit('next', 1);
+        });
 
     });
 
