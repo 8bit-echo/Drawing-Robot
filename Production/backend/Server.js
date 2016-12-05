@@ -72,6 +72,7 @@ var sliceDimensions = {};
 
 var analysisResults = {};
 
+//from client => [{x,y}, {x,y}]
 var xyCoordinates;
 
 // Server control flow manager
@@ -81,6 +82,8 @@ var scheduler = new event.EventEmitter();
 var robot = new event.EventEmitter();
 
 var arduino = new j5.Board();
+
+
 
 
 
@@ -215,6 +218,79 @@ function trace(slicePath, i) {
     });
 }
 
+//value mapper
+function mapXY(val, low, high, min, max) {
+    var newVal = (val - low) * (max - min) / (high - (low + 1) + min);
+    //decimal point accuracy
+    return newVal.toFixed(2);
+}
+
+//Robot directions
+function prepareCoordinate(coordObj, i, cb) {
+    var xDelta;
+    var yDelta;
+    var xDir;
+    var yDir;
+
+    //map each xy pair to motor steps
+    // coordObj.x = mapXY(coordObj.x, 0, 315, 0, 14000);
+    // coordObj.y = mapXY(coordObj.y, 0, 381, 0, 16900);
+
+    if (i === 0) {
+        //default delta from the first point is here.
+        xDelta = coordObj.x;
+        yDelta = coordObj.y;
+        // console.log(xDelta);
+
+    } else {
+        //calculate the delta movement from each previous steps
+        xDelta = calculateDeltas(coordObj.x, xyCoordinates[i - 1].x);
+        yDelta = calculateDeltas(coordObj.y, xyCoordinates[i - 1].y);
+    }
+
+    // determine if the direction is positive or negative
+    if (xDelta < 0) {
+        xDir = 0;
+        xDelta = xDelta * -1;
+
+        coordObj.xDelta = xDelta;
+        coordObj.xDir = xDir;
+    } else {
+        xDir = 1;
+
+        coordObj.xDelta = xDelta;
+        coordObj.xDir = xDir;
+    }
+
+    if (yDelta < 0) {
+        yDir = 1;
+        yDelta = yDelta * -1;
+
+        coordObj.yDelta = yDelta;
+        coordObj.yDir = yDir;
+    } else {
+        yDir = 0;
+
+        coordObj.yDelta = yDelta;
+        coordObj.yDir = yDir;
+    }
+
+    // setTimeout(function() {cb();}, 0);
+    return cb(coordObj);
+}
+
+function calculateDeltas(current, prev) {
+    var delta = current - prev;
+    return delta;
+}
+
+//might not even need this one.
+function mm(mm) {
+    return mm * 44.44444444444;
+}
+
+
+
 //helper callback
 function successCallback(operationName) {
     console.log(operationName + ' successful');
@@ -231,9 +307,9 @@ function errorCallback(err) {
 //          Events             //
 //=============================//
 
-arduino.on('ready', function(){
-    console.log('Arduino online.');
-});
+
+
+
 
 io.on('connection', function(socket) {
     console.log('Requesting Handshake from client...');
@@ -343,20 +419,105 @@ io.on('connection', function(socket) {
         socket.emit('server ready for bot');
     });
 
-    socket.on('go', function(){
+    socket.on('go', function() {
         console.log('Go Button clicked');
         scheduler.emit('go');
     });
 
-    scheduler.on('go', function(){
+    scheduler.on('go', function() {
         console.log('beep borp bleep');
-        arduino.emit('begin');
+        robot.emit('begin');
     });
 
 
 
+    //=============================//
+    //       Robotic Events        //
+    //=============================//
+
+    arduino.on('ready', function() {
+        console.log('Arduino online.');
+
+        var xStepper = new j5.Stepper({
+            type: j5.Stepper.TYPE.DRIVER,
+            stepsPerRev: 200,
+            pins: {
+                step: 10,
+                dir: 11
+            }
+        });
+
+        var yStepper = new j5.Stepper({
+            type: j5.Stepper.TYPE.DRIVER,
+            stepsPerRev: 200,
+            pins: {
+                step: 9,
+                dir: 3
+            }
+        });
+
+        // xStepper.direction(0).step(mm(50), function() {
+        // console.log('done moving');
 
 
+        robot.on('done', function() {
+            console.log('finished');
+        });
+
+        robot.on('next', function(i) {
+            console.log('received next', i);
+            if (i < xyCoordinates.length) {
+                prepareCoordinate(xyCoordinates[i], i, function(coord) {
+                    console.log(coord);
+                    move(coord, function() {
+                        robot.emit('next', i + 1);
+                    });
+                });
+            } else {
+                robot.emit('done');
+            }
+        });
+
+        robot.on('begin', function() {
+            console.log('received begin');
+            prepareCoordinate(xyCoordinates[0], 0, function(coord) {
+                console.log(coord);
+                move(coord, function() {
+                    robot.emit('next', 1);
+                });
+            });
+        });
+
+        function move(coord, done) {
+            var xDone = false;
+            var yDone = false;
+            xStepper.direction(coord.xDir).step(mm(coord.xDelta), function() {
+                console.log('x done');
+                xDone = true;
+                if (xDone && yDone) {
+                    console.log('both done');
+                    if (typeof done === 'function') {
+                        done();
+                    } else {
+                        console.log(typeof done);
+                    }
+                }
+            });
+
+            yStepper.direction(coord.yDir).step(mm(coord.yDelta), function() {
+                console.log('y done');
+                yDone = true;
+                if (xDone && yDone) {
+                    console.log('both done');
+                    if (typeof done === 'function') {
+                        done();
+                    } else {
+                        console.log(typeof done);
+                    }
+                }
+            });
+        }
+    });
 });
 
 //

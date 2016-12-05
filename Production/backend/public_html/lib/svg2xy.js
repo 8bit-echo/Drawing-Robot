@@ -54,7 +54,8 @@ function wkt2xyCoordinates(wktString, sliceDimensions) {
         //send to top level scope array
         usableCoordinates.push(pair);
     }
-
+    //go back to origin
+    usableCoordinates.push({x:0, y:0});
     return usableCoordinates;
 }
 
@@ -85,6 +86,7 @@ function Formatter() {
 }
 
 function convertToCoordinates(wktCoordinatePair, sliceDimensions) {
+    //[x,y]
 
     var mmWidth = 315;
     var mmHeight = 381;
@@ -95,10 +97,17 @@ function convertToCoordinates(wktCoordinatePair, sliceDimensions) {
     // wktCoordinatePair[0] = mapXY(wktCoordinatePair[0], 0, 315, 0, mmWidth);
     // wktCoordinatePair[1] = mapXY(wktCoordinatePair[1], 0, 381, 0, mmHeight);
 
-    wktCoordinatePair[0] = mapXY(wktCoordinatePair[0], 0, sliceDimensions.width, 0, mmWidth);
-    wktCoordinatePair[1] = mapXY(wktCoordinatePair[1], 0, sliceDimensions.height, 0, mmHeight);
+    var wktObjectPair = {x:0, y:0};
 
-    return wktCoordinatePair;
+    wktObjectPair.x = mapXY(wktCoordinatePair[0], 0, sliceDimensions.width, 0, mmWidth);
+    wktObjectPair.y = mapXY(wktCoordinatePair[1], 0, sliceDimensions.height, 0, mmHeight);
+
+    // wktCoordinatePair[0] = mapXY(wktCoordinatePair[0], 0, sliceDimensions.width, 0, mmWidth);
+    // wktCoordinatePair[1] = mapXY(wktCoordinatePair[1], 0, sliceDimensions.height, 0, mmHeight);
+
+
+
+    return wktObjectPair;
 
 }
 

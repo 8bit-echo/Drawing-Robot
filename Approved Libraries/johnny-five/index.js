@@ -154,29 +154,26 @@ arduino.on('ready', function() {
         return delta;
     }
 
-    function drawSquare(coords, cb) {
-
-        // loop through all the coordinates
-        for (var i = 0; i < coords.length; i++) {
+    function prepareCoordinate(coordObj, cb) {
             var xDelta;
             var yDelta;
             var xDir;
             var yDir;
 
             //map each xy pair to motor steps
-            coords[i].x = mapXY(coords[i].x, 0, 315, 0, 14000);
-            coords[i].y = mapXY(coords[i].y, 0, 381, 0, 16900);
+            coordObj.x = mapXY(coordObj.x, 0, 315, 0, 14000);
+            coordObj.y = mapXY(coordObj.y, 0, 381, 0, 16900);
 
             if (i === 0) {
                 //default delta from the first point is here.
-                xDelta = coords[i].x;
-                yDelta = coords[i].y;
+                xDelta = coordObj.x;
+                yDelta = coordObj.y;
                 // console.log(xDelta);
 
             } else {
                 //calculate the delta movement from each previous steps
-                xDelta = calculateDeltas(coords[i].x, coords[i - 1].x);
-                yDelta = calculateDeltas(coords[i].y, coords[i - 1].y);
+                xDelta = calculateDeltas(coordObj.x, coords[i - 1].x);
+                yDelta = calculateDeltas(coordObj.y, coords[i - 1].y);
                 console.log(xDelta);
             }
 
@@ -185,30 +182,33 @@ arduino.on('ready', function() {
                 xDir = 0;
                 xDelta = xDelta * -1;
 
-                coords[i].xDelta = xDelta;
-                coords[i].xDir = xDir;
+                coordObj.xDelta = xDelta;
+                coordObj.xDir = xDir;
             } else {
                 xDir = 1;
 
-                coords[i].xDelta = xDelta;
-                coords[i].xDir = xDir;
+                coordObj.xDelta = xDelta;
+                coordObj.xDir = xDir;
             }
 
             if (yDelta < 0) {
                 yDir = 1;
                 yDelta = yDelta * -1;
 
-                coords[i].yDelta = yDelta;
-                coords[i].yDir = yDir;
+                coordObj.yDelta = yDelta;
+                coordObj.yDir = yDir;
             } else {
                 yDir = 0;
 
-                coords[i].yDelta = yDelta;
-                coords[i].yDir = yDir;
+                coordObj.yDelta = yDelta;
+                coordObj.yDir = yDir;
             }
         }
 
-        cb();
+        setTimeout(function(){
+            cb();
+        },0);
+        return coordObj;
     }
 
     function mm(mm) {
