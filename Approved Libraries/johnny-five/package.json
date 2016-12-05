@@ -1,0 +1,19 @@
+{
+  "name": "johhny-five-test",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "run"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async-each-series": "^1.1.0",
+    "async-series": "0.0.1",
+    "async-waterfall": "^0.1.5",
+    "johnny-five": "^0.10.6",
+    "promise": "^7.1.1",
+    "tessel-io": "^0.10.1"
+  }
+}

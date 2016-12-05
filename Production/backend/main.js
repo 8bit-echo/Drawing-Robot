@@ -27,8 +27,7 @@ $(document).ready(function() {
     //runs when receives SVG string from the server.
     socket.on('svgData', function(data){
         console.log('receiving svg Data...');
-
-        $('#svgString').val(data.svgData);
-        // console.log(data.svgData);
+        console.log('is this even the right file?');
+        console.log(data.svgData);
     });
 });

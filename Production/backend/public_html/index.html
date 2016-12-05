@@ -12,23 +12,29 @@
 
 <body>
     <div id="container" class="container">
+
         <div class="mainWindow">
             <div class="mainButtonContainer">
                 <button class="mainWindowButton">
                     <i class="fa fa-3x fa-home"></i>
                 </button>
+
                 <button class="mainWindowButton">
                     <i class="fa fa-3x fa-rotate-right"></i>
                 </button>
+
                 <button class="mainWindowButton">
                     <i class="fa fa-3x fa-rotate-left"></i>
                 </button>
+
                 <button class="mainWindowButton">
                     <i class="fa fa-3x fa-arrows-h"></i>
                 </button>
+
                 <button class="mainWindowButton">
                     <i class="fa fa-3x fa-arrows-v"></i>
                 </button>
+
                 <button class="mainWindowButton">
                     <i class="fa fa-3x fa-remove"></i>
                 </button>
@@ -36,16 +42,18 @@
 
             <div class="mainContainer">
                 <div class="artContainer">
-                    <canvas id="artContainer" width='550' height='370'></canvas>
                     <span>(0,0)</span>
+                    <canvas id="artContainer" width='550' height='370'></canvas>
                 </div>
             </div>
-        </div>
-        <div class="sidebar">
-            <!-- <button class="bigButton" type="button">Open</button> -->
-            <div class="buttonContainer"><input class="bigButton fileinput" id="file" type="file">
 
-            <label for="file" class="openButton"> Open</label></div>
+        </div>
+
+
+        <div class="sidebar">
+
+            <div class="buttonContainer"><input class="bigButton fileinput" id="file" type="file">
+            <label for="file" id="upload" class="openButton"> Open </label></div>
 
             <div class="inputGroup" id="topInputGroup">
                 <span>Target Size (in)</span>
@@ -57,7 +65,10 @@
                 <input type="number" class="numberInput"id="targetSize-H">
                 <button class="incriment-btn"id="targetSize-H-down">-</button>
                 <button class="incriment-btn"id="targetSize-H-up">+</button>
+                <br>
+                <button class="small-btn" id="targetSizeConfirm">Confirm Size</button>
             </div>
+
             <div class="inputGroup">
                 <span>Manual XY Override (mm)</span>
                 <br>
@@ -69,11 +80,11 @@
                 <button class="incriment-btn" id="manualXY-H-down">-</button>
                 <button class="incriment-btn" id="manualXY-H-up">+</button>
             </div>
-            <!-- <div class="debug">
-                <input type="textarea" id="debug">
-            </div> -->
-            <button class="bigButton" type="button">Go</button>
+
+            <button class="bigButton" type="button" id="go">Go</button>
+
         </div>
+
     </div>
     </div>
 

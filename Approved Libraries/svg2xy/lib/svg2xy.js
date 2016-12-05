@@ -29,6 +29,7 @@ function svg2xy() {
     //converts WKT data to [[x,y],[x,y]]
     var coordinates = wkt2xyCoordinates(wktString);
 
+
     //optional
     drawPointsToCanvas(coordinates);
     return coordinates;
@@ -56,7 +57,7 @@ function wkt2xyCoordinates(wktString) {
         //send to top level scope array
         usableCoordinates.push(pair);
     }
-
+    console.log(usableCoordinates);
     return usableCoordinates;
 }
 
