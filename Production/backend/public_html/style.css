@@ -200,6 +200,11 @@ select{
     outline: 0
 }
 
+#go:disabled{
+    background-color: lightgrey;
+    color: dimgrey;
+}
+
 .sidebar .bigButton:active {
     background-color: #11527e
 }

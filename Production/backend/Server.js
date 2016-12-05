@@ -11,14 +11,14 @@ const io = require('socket.io')(socketServer);
 socketServer.listen(3000, () => {
     console.log('Server up on localhost:3000');
     console.log('waiting for commands...');
-});                                                     //for server
-const fs = require('fs');                               // for upload
-const jimp = require('jimp');                           //Javascript Image Processing
-const sizeOf = require('image-size');                   //slicing image
+}); //for server
+const fs = require('fs'); // for upload
+const jimp = require('jimp'); //Javascript Image Processing
+const sizeOf = require('image-size'); //slicing image
 const imageTracer = require(__dirname + '/lib/imagetracer_v1.1.2'); // Tracer
 const PNGReader = require(__dirname + '/lib/PNGReader.js'); // Tracer
-const event = require('events');                        // Control Flow
-const j5 = require('johnny-five');                      // robotics
+const event = require('events'); // Control Flow
+const j5 = require('johnny-five'); // robotics
 
 
 //=============================//
@@ -72,6 +72,8 @@ var sliceDimensions = {};
 
 var analysisResults = {};
 
+var xyCoordinates;
+
 // Server control flow manager
 var scheduler = new event.EventEmitter();
 
@@ -86,7 +88,7 @@ var arduino = new j5.Board();
 //   Global Scope Functions    //
 //=============================//
 
-function getFileExtension(fileName){
+function getFileExtension(fileName) {
     return fileName.substr(-3, fileName.length);
 }
 
@@ -107,7 +109,7 @@ function analyzeImage(imagePath, targetSize, callback) {
     var leftoverHSliceWidth = targetSize.width - (hSlices * 315);
     var leftoverVSliceHeight = targetSize.height - (vSlices * 381);
 
-    setTimeout(callback,0);
+    setTimeout(callback, 0);
     return {
         isSVG: isSVG,
         dimensions: {
@@ -136,12 +138,12 @@ function sliceImage(imagePath, jimpImage, dimensionsObject) {
     var slicesArray = [];
 
     var dimensions = sizeOf(imagePath);
-    var sliceWidth = dimensions.width / 1;  //dimensionsObject.slices.horiztonalSlices;
-    var sliceHeight = dimensions.height / 1;  //dimensionsObject.slices.verticalSlices;
+    var sliceWidth = dimensions.width / 1; //dimensionsObject.slices.horiztonalSlices;
+    var sliceHeight = dimensions.height / 1; //dimensionsObject.slices.verticalSlices;
 
     //send the slice dimensions to the client for XY conversion.
-        sliceDimensions.width = sliceWidth;
-        sliceDimensions.height = sliceHeight;
+    sliceDimensions.width = sliceWidth;
+    sliceDimensions.height = sliceHeight;
 
     var sliceXOrigin = 0;
     var sliceYOrigin = 0;
@@ -171,12 +173,12 @@ function processImage(imagePath, analysisResults, callback) {
         for (var i = 0; i < slices.length; i++) {
             slices[i].write(__dirname + '/slices/' + 'slice' + i + '.png', successCallback('Slice write'));
 
-            if (i == slices.length-1) {
-                slices[i].write(__dirname + '/slices/' + 'slice' + i + '.png', function(){
+            if (i == slices.length - 1) {
+                slices[i].write(__dirname + '/slices/' + 'slice' + i + '.png', function() {
                     successCallback('Slice write');
-                    setTimeout(function(){
+                    setTimeout(function() {
                         callback();
-                    },0);
+                    }, 0);
                 });
 
             }
@@ -229,6 +231,10 @@ function errorCallback(err) {
 //          Events             //
 //=============================//
 
+arduino.on('ready', function(){
+    console.log('Arduino online.');
+});
+
 io.on('connection', function(socket) {
     console.log('Requesting Handshake from client...');
 
@@ -237,13 +243,15 @@ io.on('connection', function(socket) {
     uploader.listen(socket);
 
 
-    socket.emit('server handshake', {action: 'received handshake from server'});
+    socket.emit('server handshake', {
+        action: 'received handshake from server'
+    });
 
     socket.on('client handshake', function(data) {
         console.log(data.action);
     });
 
-    socket.on('upload complete', function(data){
+    socket.on('upload complete', function(data) {
         console.log('file uploaded to server successfully');
         uploadedFileName = data.filename;
         var fileType = getFileExtension(uploadedFileName);
@@ -257,17 +265,17 @@ io.on('connection', function(socket) {
         console.log('uploaded file name is: ' + uploadedFileName);
     });
 
-    socket.on('new target size', function(targetSizeObject){
+    socket.on('new target size', function(targetSizeObject) {
 
         uploadedFilePath = __dirname + "/uploads/" + uploadedFileName;
 
-        analysisResults = analyzeImage(uploadedFilePath, targetSizeObject, function(){
+        analysisResults = analyzeImage(uploadedFilePath, targetSizeObject, function() {
             scheduler.emit('image analysis complete');
         });
 
     });
 
-    scheduler.on('image analysis complete', function(){
+    scheduler.on('image analysis complete', function() {
         console.log('image analysis complete');
 
         if (analysisResults.isSVG) {
@@ -281,7 +289,7 @@ io.on('connection', function(socket) {
             //png processing.
             console.log('is png');
             //slicing
-            processImage(uploadedFilePath, analysisResults, function(){
+            processImage(uploadedFilePath, analysisResults, function() {
                 scheduler.emit('images sliced', 1);
                 socket.emit('slice dimensions', sliceDimensions);
             });
@@ -289,14 +297,14 @@ io.on('connection', function(socket) {
 
     });
 
-    scheduler.on('images sliced', function(numSlices){
+    scheduler.on('images sliced', function(numSlices) {
         console.log('images sliced');
         console.log(numSlices);
         //trace
         for (var i = 0; i < numSlices; i++) {
             trace(__dirname + '/slices/' + 'slice' + i + '.png', i);
-            if (i == numSlices -1 ) {
-                setTimeout(function(){
+            if (i == numSlices - 1) {
+                setTimeout(function() {
                     scheduler.emit('svg complete', 'output');
                 }, 2000);
             }
@@ -323,22 +331,27 @@ io.on('connection', function(socket) {
         });
     });
 
-    socket.on('coordinates', function(coordinates){
-        console.log(coordinates);
+    socket.on('coordinates', function(coordinates) {
+        xyCoordinates = coordinates;
+        setTimeout(function() {
+            scheduler.emit('coordinates ready for bot');
+        }, 0);
     });
 
+    scheduler.on('coordinates ready for bot', function() {
+        console.log('coordinates ready for bot');
+        socket.emit('server ready for bot');
+    });
 
+    socket.on('go', function(){
+        console.log('Go Button clicked');
+        scheduler.emit('go');
+    });
 
-
-
-
-
-
-
-
-
-
-
+    scheduler.on('go', function(){
+        console.log('beep borp bleep');
+        arduino.emit('begin');
+    });
 
 
 

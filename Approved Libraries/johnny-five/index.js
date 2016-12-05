@@ -8,7 +8,7 @@ const events = require('events');
 
 var robot = new events.EventEmitter();
 
-var board = new j5.Board();
+var arduino = new j5.Board();
 
 function goHome(currentPos) {
     console.log('moving to home position');
@@ -61,7 +61,7 @@ var squareCoordinates = [{
 }];
 
 
-board.on('ready', function() {
+arduino.on('ready', function() {
     function goToCoordinate(currentPos, toPos) {
         var xDirection;
         var yDirection;
